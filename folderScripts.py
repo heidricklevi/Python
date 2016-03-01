@@ -3,10 +3,10 @@ import re
 import pprint
 import sys
 import shutil
+from yattag import Doc
 
 os.chdir("C:\\mockTestScript\\Clients")
 listOfClients = os.listdir(os.getcwd())
-
 clientRoot = "C:\\mockTestScript\\Clients\\"
 individTemplatePath = "C:\\mockTestScript\\templates\\File Structure Ind XXXX Last, First & Spouse\\2017 XXXX"
 businessTemplatePath = "C:\\mockTestScript\\templates\\File Structure BUS XXXX Business Name\\123117 XXXX"
@@ -14,6 +14,7 @@ businessTemplatePathNotYear = "C:\\mockTestScript\\templates\\File Structure BUS
 newBusinessPath = "C:\\mockTestScript\\clients\\File Structure BUS XXXX Business Name"
 fullIndividualTemplate = "C:\\mockTestScript\\templates\\File Structure Ind XXXX Last, First & Spouse"
 newIndClientLocation = "C:\\mockTestScript\\clients\\File Structure Ind XXXX Last, First & Spouse"
+
 
 def getClientID(arg):
     for client in listOfClients:
@@ -55,7 +56,6 @@ def checkClientForX():
             newPath = os.path.join(clientRoot, dir)
             recursiveWalk(newPath, dir[0:4])
 
-
 def isBusClient(clientPath):
     clientRegex = re.compile(r'\d{6}(\s)([X]{4}|\d{4})')
     if clientRegex.search(clientPath):
@@ -71,8 +71,7 @@ def isIndividualClient(clientPath):
         return False
 
 def afterCopy(pathname, oldYear, newYear, clientID):
-    regex = re.compile(r'' + oldYear + '[X]{4}')
-
+    regex = re.compile(r'' + oldYear + '(\s)' + '[X]{4}|[X]{4}')
     for currentFolder, subFolder, fileName in os.walk(pathname):
         if regex.search(currentFolder):
             newPath = regex.sub(newYear + " " + clientID, currentFolder)
@@ -111,10 +110,12 @@ def addNewYear():
 
             if client in busClients:
                 baseName = os.path.basename(businessTemplatePath)
-                clientID = client[0:5]
-                beforeIncrement = baseName[0:7]
+                clientID = client[0:4]
+                beforeIncrement = baseName[0:6]
                 baseName = baseName.replace(beforeIncrement, businessBaseName+ " ")
                 finalName = clientRoot + client + "\\" + str(baseName)
+                newName = replaceXInPath(clientID, finalName)
+                finalName = newName
                 if not os.path.exists(finalName):
                     shutil.copytree(businessTemplatePath, finalName)
                 afterCopy(finalName, beforeIncrement, businessBaseName, clientID)
@@ -122,10 +123,12 @@ def addNewYear():
 
             elif client in individClient:
                 baseName = os.path.basename(individTemplatePath)
-                clientID = client[0:5]
-                beforeIncrement = baseName[0:5]
+                clientID = client[0:4]
+                beforeIncrement = baseName[0:4]
                 baseName = baseName.replace(beforeIncrement, individBaseName+ " ")
                 finalName = clientRoot + client + "\\" + str(baseName)
+                newName = replaceXInPath(clientID, finalName)
+                finalName = newName
                 if not os.path.exists(finalName):
                     shutil.copytree(individTemplatePath, finalName)
                 afterCopy(finalName, beforeIncrement, individBaseName, clientID)
