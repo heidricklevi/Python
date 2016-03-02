@@ -82,6 +82,11 @@ def afterCopy(pathname, oldYear, newYear, clientID):
             newPath = regex.sub(newYear + " " + clientID, fullFilePath)
             os.rename(fullFilePath, newPath)
 
+def checkAllClientsAndReplaceX():
+    for dir in os.listdir(clientRoot):
+            clientID = dir[0:4]
+            newPath = os.path.join(clientRoot, dir)
+            recursiveWalk(newPath, clientID)
 
 
 
@@ -193,6 +198,7 @@ def presentScreen():
     print("\nWould you like to create a new client?---Type N---to create a new client")
     print("Would you like to add a year to existing clients?----Type Y---to add a year to existing clients")
     print("Would you like to replace Xs for a specific Client by ID?----Type I----to check a specific Client")
+    print("Would you like to check all clients for Xs and replace as needed?----Type C----to check all clients")
     print("If you would like to exit, type----E----.")
     print("\nFyi: Client Root Directory: " + clientRoot + "\n" "Directory year: "
           + individTemplatePath + "\n" + "Template Paths: " + fullIndividualTemplate)
@@ -209,6 +215,8 @@ while userChoice != "E":
         addNewYear()
     elif userChoice == "I":
         checkClientForX()
+    elif userChoice == "C":
+        checkAllClientsAndReplaceX()
     elif userChoice == "E":
         exit()
     presentScreen()
