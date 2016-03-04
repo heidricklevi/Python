@@ -71,16 +71,25 @@ def isIndividualClient(clientPath):
         return False
 
 def afterCopy(pathname, oldYear, newYear, clientID):
-    regex = re.compile(r'' + oldYear + '(\s)' + '[X]{4}|[X]{4}')
+    regex = re.compile(r'' + oldYear + '(\s)' + '[X]{4}')
+    regex1 = re.compile(r'[X]{4}')
     for currentFolder, subFolder, fileName in os.walk(pathname):
-        if regex.search(currentFolder):
-            newPath = regex.sub(newYear + " " + clientID, currentFolder)
-            os.rename(currentFolder, newPath + " ")
-        elif regex.search(str(fileName)):
-            file = ''.join(fileName)
-            fullFilePath = os.path.join(currentFolder, file)
-            newPath = regex.sub(newYear + " " + clientID, fullFilePath)
-            os.rename(fullFilePath, newPath)
+        searchObject = regex.search(currentFolder)
+        searchObject1 = regex1.search(currentFolder)
+
+        if searchObject is not None or searchObject1 is not None:
+            if searchObject:
+                newPath = regex.sub(newYear + " " + clientID, currentFolder)
+                os.rename(currentFolder, newPath + " ")
+            elif searchObject1:
+                newPath = regex1.sub(clientID, currentFolder)
+                os.rename(currentFolder, newPath)
+
+            elif regex.search(str(fileName)):
+                file = ''.join(fileName)
+                fullFilePath = os.path.join(currentFolder, file)
+                newPath = regex.sub(newYear + " " + clientID, fullFilePath)
+                os.rename(fullFilePath, newPath)
 
 def checkAllClientsAndReplaceX():
     for dir in os.listdir(clientRoot):
