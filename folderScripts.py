@@ -15,6 +15,8 @@ newBusinessPath = "C:\\mockTestScript\\clients\\File Structure BUS XXXX Business
 fullIndividualTemplate = "C:\\mockTestScript\\templates\\File Structure Ind XXXX Last, First & Spouse"
 newIndClientLocation = "C:\\mockTestScript\\clients\\File Structure Ind XXXX Last, First & Spouse"
 
+def isValidClientInput(clientID):
+    assert (len(str(clientID)) == 4 and int(clientID)), "Client ID or Ind. Year must be exactly 4 digits"
 
 def getClientID(arg):
     for client in listOfClients:
@@ -51,6 +53,8 @@ def recursiveWalk(rootDir, clientID):
 def checkClientForX():
     print("Please enter the ID of the Client you would like to inspect.")
     checkID = input()
+    isValidClientInput(checkID)
+
     for dir in os.listdir(clientRoot):
         if dir[0:4] == checkID:
             newPath = os.path.join(clientRoot, dir)
@@ -80,16 +84,25 @@ def afterCopy(pathname, oldYear, newYear, clientID):
         if searchObject is not None or searchObject1 is not None:
             if searchObject:
                 newPath = regex.sub(newYear + " " + clientID, currentFolder)
-                os.rename(currentFolder, newPath + " ")
+                os.rename(currentFolder, newPath)
             elif searchObject1:
                 newPath = regex1.sub(clientID, currentFolder)
                 os.rename(currentFolder, newPath)
 
-            elif regex.search(str(fileName)):
+            if regex.search(str(fileName)):
                 file = ''.join(fileName)
+                currentFolder = regex.sub(newYear + " " + clientID, currentFolder)
                 fullFilePath = os.path.join(currentFolder, file)
-                newPath = regex.sub(newYear + " " + clientID, fullFilePath)
+                newPath = regex.sub(newYear + " " +  clientID, fullFilePath)
                 os.rename(fullFilePath, newPath)
+
+            elif regex1.search(str(fileName)):
+                file = ''.join(fileName)
+                currentFolder = regex1.sub(clientID, currentFolder)
+                fullFilePath = os.path.join(currentFolder, file)
+                newPath = regex1.sub(clientID, fullFilePath)
+                os.rename(fullFilePath, newPath)
+
 
 def checkAllClientsAndReplaceX():
     for dir in os.listdir(clientRoot):
@@ -110,17 +123,23 @@ def addNewYear():
     individClient = []
     print("Please Enter the desired year for Business Clients e.g. 123116")
     businessBaseName = input()
+    assert (len(str(businessBaseName)) == 6 and int(businessBaseName)), "Business Year must be exactly 6 digits--123116"
+
     print("Please Enter the desired year for Individual Clients i.e. 2016")
     individBaseName = input()
+    isValidClientInput(individBaseName)
+
     for client in os.listdir(clientRoot):
         subDirs = os.path.join(clientRoot, client)
         for dir in os.listdir(subDirs):
             if isBusClient(dir):
                 busClients.append(client)
+                print("Successfully added " + client + "to Business clients.")
             elif isIndividualClient(dir):
                 individClient.append(client)
+                print("Successfully added " + client + "to Individual clients.")
             else:
-                print("Not a valid Client")
+                print("Skipping...")
 
             if client in busClients:
                 baseName = os.path.basename(businessTemplatePath)
@@ -148,15 +167,10 @@ def addNewYear():
                 afterCopy(finalName, beforeIncrement, individBaseName, clientID)
 
 
-
-
-
     busClients = sorted(set(busClients))
     individClient = sorted(set(individClient))
     pprint.pprint(individClient)
     pprint.pprint(busClients)
-
-
 
 
 def createNewClient():
@@ -169,6 +183,7 @@ def createNewClient():
     if answer == "B":
         print("Please enter the Business ID number for the new client")
         id = input()
+        isValidClientInput(id)
         print("Please enter the name of the business")
         busName = input()
         #Get file structure from templates
@@ -184,6 +199,7 @@ def createNewClient():
     elif answer == "C":
         print("Please enter the Individual Client ID number for the new Client")
         individID = input()
+        isValidClientInput(individID)
 
         print("Please enter the individual's name")
         indName = input()
