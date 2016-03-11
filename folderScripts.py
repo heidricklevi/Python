@@ -219,6 +219,9 @@ def createNewClient():
 
 
 def presentScreen():
+    print("While this screen is present type--croot-- to change the Client Root Directory"
+          "type--dyear--to change the individual directory year. type--itemplate---to change the individual template path."
+          "type--byear---to change the business year. type---btemplate---to change the business template path.\n\n\n\ ")
     print("Please choose an option below based on what you are trying to do.")
     print("\nWould you like to create a new client?---Type N---to create a new client")
     print("Would you like to add a year to existing clients?----Type Y---to add a year to existing clients")
@@ -234,7 +237,27 @@ userChoice = str.capitalize(userChoice)
 
 
 while userChoice != "E":
-    if userChoice == "N":
+    if userChoice == "CROOT":
+        print("Type the new name of the root path")
+        clientRoot = input()
+        print("The new root directory path is: " + clientRoot)
+    elif userChoice == "DYEAR":
+        print("Enter the new path for the individual directory year. ")
+        individTemplatePath = input()
+        print("The new individual year path is: " + individTemplatePath)
+    elif userChoice == "BYEAR":
+        print("Enter the new path for the business year: ")
+        businessTemplatePath = input()
+        print("The new business directory year is: " + businessTemplatePath)
+    elif userChoice == "ITEMPLATE":
+        print("Please enter the new path for the individual template ")
+        fullIndividualTemplate = input()
+        print("The new individual path is: " + fullIndividualTemplate)
+    elif userChoice == "BTEMPLATE":
+        print("Enter the new path for Business Template ")
+        businessTemplatePathNotYear = input()
+        print("The new Business template path is: " + businessTemplatePathNotYear)
+    elif userChoice == "N":
         createNewClient()
     elif userChoice == "Y":
         addNewYear()
