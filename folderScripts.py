@@ -3,10 +3,8 @@ import re
 import pprint
 import sys
 import shutil
-from yattag import Doc
 
-os.chdir("C:\\mockTestScript\\Clients")
-listOfClients = os.listdir(os.getcwd())
+
 clientRoot = "C:\\mockTestScript\\Clients\\"
 individTemplatePath = "C:\\mockTestScript\\templates\\File Structure Ind XXXX Last, First & Spouse\\2017 XXXX"
 businessTemplatePath = "C:\\mockTestScript\\templates\\File Structure BUS XXXX Business Name\\123117 XXXX"
@@ -18,15 +16,6 @@ newIndClientLocation = "C:\\mockTestScript\\clients\\File Structure Ind XXXX Las
 def isValidClientInput(clientID):
     assert (len(str(clientID)) == 4 and int(clientID)), "Client ID or Ind. Year must be exactly 4 digits"
 
-def getClientID(arg):
-    for client in listOfClients:
-        clientID = client[0:4]
-        regex = re.compile(clientID)
-        mo = regex.search(arg)
-        if mo != None:
-            matchString = mo.group()
-            if matchString == clientID:
-                return clientID
 
 def replaceXInPath(clientID, pathname):
     regex = re.compile(r'[X]{4}')
@@ -219,28 +208,53 @@ def createNewClient():
 
 
 def presentScreen():
-    print("While this screen is present type--R-- to change the Client Root Directory"
-          "type--d--to change the individual directory year\n type--T---to change the individual template path.\n"
-          "type--A---to change the business year. type---B---to change the business template path.\n\n ")
-    print("Please choose an option below based on what you are trying to do.")
-    print("\nWould you like to create a new client?---Type N---to create a new client")
-    print("Would you like to add a year to existing clients?----Type Y---to add a year to existing clients")
-    print("Would you like to replace Xs for a specific Client by ID?----Type I----to check a specific Client")
-    print("Would you like to check all clients for Xs and replace as needed?----Type C----to check all clients")
-    print("If you would like to see current Directory Paths---Type S--")
-    print("If you would like to exit, type----E----.")
+    print("Change Client Root Directory---------------R\n"
+          "Change ind. directory year-----------------D"
+        "\nChange Ind. Template Path------------------T\n"
+          "Change Bus. Year---------------------------A\n"
+          "Change Bus. Template Path------------------B\n"
+          "Change new Ind. Location-------------------L\n"
+          "Change new Bus. Location-------------------Z\n"
+          "Display Current Paths----------------------S")
+    print("---------------------------------------------------------------\n")
+    print("What would you like to do?-----------------------Key to Press-------\n"
+          "====================================================================\n"
+          "Create a New Client?----------------|------------------N------------\n"
+          "Add a directory year?---------------|------------------Y------------\n"
+          "Replace all Xs by client ID?--------|------------------I------------\n"
+          "Check/Replace Xs for all Clients?---|------------------C------------\n"
+          "Exit?-------------------------------|------------------E------------\n"
+          "====================================================================")
+    # print("\nWould you like to create a new client?---Type N---to create a new client")
+    # print("Would you like to add a year to existing clients?----Type Y---to add a year to existing clients")
+    # print("Would you like to replace Xs for a specific Client by ID?----Type I----to check a specific Client")
+    # print("Would you like to check all clients for Xs and replace as needed?----Type C----to check all clients")
+    # print("If you would like to exit, type----E----.")
 
 def showDirectoryPaths():
     print("Client Root Directory: " + clientRoot + "\n")
     print("Individual Client Template Year Path: " + individTemplatePath)
     print("Individual Template Path: " + fullIndividualTemplate)
     print("Business Directory Year: " + businessTemplatePath)
-    print("Business Directory Template: " + businessTemplatePathNotYear)
+    print("New Ind. Client Location: " + newIndClientLocation)
+    print("New bus. Client Location: " + newBusinessPath)
+    print("Business Directory Template: " + businessTemplatePathNotYear + "\n")
 
 presentScreen()
 userChoice = input()
 userChoice = str.capitalize(userChoice)
 
+def newIndividPath():
+    global newIndClientLocation
+    print("Please enter the new path for the new client (Applicable only when creating a new client)")
+    newIndClientLocation = input()
+    print("The new path for the new client is: " + newIndClientLocation)
+
+def newBusPath():
+    global newBusinessPath
+    print("Please enter the new path for the new Business Client (Applicable only when creating a new bus client)")
+    newBusinessPath = input()
+    print("The new path for the new bus. client is: " + newBusinessPath)
 
 def itemplate():
     global fullIndividualTemplate
@@ -280,6 +294,10 @@ def individualYearPath():
 while userChoice != "E":
     if userChoice == "R":
         clientRootPath()
+    elif userChoice == "L":
+        newIndividPath()
+    elif userChoice == "Z":
+        newBusPath()
     elif userChoice == "D":
         individualYearPath()
     elif userChoice == "A":
