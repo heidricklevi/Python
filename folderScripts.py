@@ -5,13 +5,21 @@ import sys
 import shutil
 
 
-clientRoot = "C:\\mockTestScript\\Clients\\"
-individTemplatePath = "C:\\mockTestScript\\templates\\File Structure Ind XXXX Last, First & Spouse\\2017 XXXX"
-businessTemplatePath = "C:\\mockTestScript\\templates\\File Structure BUS XXXX Business Name\\123117 XXXX"
-businessTemplatePathNotYear = "C:\\mockTestScript\\templates\\File Structure BUS XXXX Business Name"
-newBusinessPath = "C:\\mockTestScript\\clients\\File Structure BUS XXXX Business Name"
-fullIndividualTemplate = "C:\\mockTestScript\\templates\\File Structure Ind XXXX Last, First & Spouse"
-newIndClientLocation = "C:\\mockTestScript\\clients\\File Structure Ind XXXX Last, First & Spouse"
+# clientRoot = "C:\\mockTestScript\\Clients\\"
+# individTemplatePath = "C:\\mockTestScript\\templates\\File Structure Ind XXXX Last, First & Spouse\\2017 XXXX"
+# businessTemplatePath = "C:\\mockTestScript\\templates\\File Structure BUS XXXX Business Name\\123117 XXXX"
+# businessTemplatePathNotYear = "C:\\mockTestScript\\templates\\File Structure BUS XXXX Business Name"
+# newBusinessPath = "C:\\mockTestScript\\clients\\File Structure BUS XXXX Business Name"
+# fullIndividualTemplate = "C:\\mockTestScript\\templates\\File Structure Ind XXXX Last, First & Spouse"
+# newIndClientLocation = "C:\\mockTestScript\\clients\\File Structure Ind XXXX Last, First & Spouse"
+
+lines = [line.rstrip('\n') for line in open('filepaths')]
+
+
+clientRoot, individTemplatePath, businessTemplatePath, businessTemplatePathNotYear, \
+newBusinessPath, fullIndividualTemplate, newIndClientLocation = lines
+
+
 
 def isValidClientInput(clientID):
     assert (len(str(clientID)) == 4 and int(clientID)), "Client ID or Ind. Year must be exactly 4 digits"
@@ -123,12 +131,11 @@ def addNewYear():
         for dir in os.listdir(subDirs):
             if isBusClient(dir):
                 busClients.append(client)
-                print("Successfully added " + client + "to Business clients.")
+                # print("Successfully added " + client + "to Business clients.")
             elif isIndividualClient(dir):
                 individClient.append(client)
-                print("Successfully added " + client + "to Individual clients.")
-            else:
-                print("Skipping...")
+                # print("Successfully added " + client + "to Individual clients.")
+
 
             if client in busClients:
                 baseName = os.path.basename(businessTemplatePath)
