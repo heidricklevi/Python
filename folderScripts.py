@@ -1,9 +1,8 @@
 import os
-import re
 import pprint
-import sys
+import re
 import shutil
-
+import sys
 
 # clientRoot = "C:\\mockTestScript\\Clients\\"
 # individTemplatePath = "C:\\mockTestScript\\templates\\File Structure Ind XXXX Last, First & Spouse\\2017 XXXX"
@@ -13,11 +12,16 @@ import shutil
 # fullIndividualTemplate = "C:\\mockTestScript\\templates\\File Structure Ind XXXX Last, First & Spouse"
 # newIndClientLocation = "C:\\mockTestScript\\clients\\File Structure Ind XXXX Last, First & Spouse"
 
-lines = [line.rstrip('\n') for line in open('filepaths')]
+if os.path.exists("filepaths"):
+    lines = [line.rstrip('\n') for line in open('filepaths')]
+
+    clientRoot, individTemplatePath, businessTemplatePath, businessTemplatePathNotYear, \
+    newBusinessPath, fullIndividualTemplate, newIndClientLocation = lines
+else:
+    print("This program cannot execute properly without the path definitions which are contained in the filepaths file."
+          " Please store that file in the same directory as this executable.\n")
 
 
-clientRoot, individTemplatePath, businessTemplatePath, businessTemplatePathNotYear, \
-newBusinessPath, fullIndividualTemplate, newIndClientLocation = lines
 
 
 
