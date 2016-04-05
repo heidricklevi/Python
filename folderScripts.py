@@ -21,10 +21,6 @@ else:
     print("This program cannot execute properly without the path definitions which are contained in the filepaths file."
           " Please store that file in the same directory as this executable.\n")
 
-
-
-
-
 def isValidClientInput(clientID):
     assert (len(str(clientID)) == 4 and int(clientID)), "Client ID or Ind. Year must be exactly 4 digits"
 
@@ -131,7 +127,11 @@ def addNewYear():
     isValidClientInput(individBaseName)
 
     for client in os.listdir(clientRoot):
+        if not os.path.isdir(clientRoot + client):
+            print("Skipping " + client)
+            continue
         subDirs = os.path.join(clientRoot, client)
+
         for dir in os.listdir(subDirs):
             if isBusClient(dir):
                 busClients.append(client)
@@ -139,7 +139,6 @@ def addNewYear():
             elif isIndividualClient(dir):
                 individClient.append(client)
                 # print("Successfully added " + client + "to Individual clients.")
-
 
             if client in busClients:
                 baseName = os.path.basename(businessTemplatePath)
@@ -165,7 +164,6 @@ def addNewYear():
                 if not os.path.exists(finalName):
                     shutil.copytree(individTemplatePath, finalName)
                 afterCopy(finalName, beforeIncrement, individBaseName, clientID)
-
 
     busClients = sorted(set(busClients))
     individClient = sorted(set(individClient))
@@ -219,21 +217,14 @@ def createNewClient():
 
 
 def presentScreen():
-    print("Change Client Root Directory---------------R\n"
-          "Change ind. directory year-----------------D"
-        "\nChange Ind. Template Path------------------T\n"
-          "Change Bus. Year---------------------------A\n"
-          "Change Bus. Template Path------------------B\n"
-          "Change new Ind. Location-------------------L\n"
-          "Change new Bus. Location-------------------Z\n"
-          "Display Current Paths----------------------S")
-    print("---------------------------------------------------------------\n")
+    print("--------------------------------------------------------------------")
     print("What would you like to do?-----------------------Key to Press-------\n"
           "====================================================================\n"
           "Create a New Client?----------------|------------------N------------\n"
           "Add a directory year?---------------|------------------Y------------\n"
           "Replace all Xs by client ID?--------|------------------I------------\n"
           "Check/Replace Xs for all Clients?---|------------------C------------\n"
+          "Display Current File Paths----------|------------------S------------\n"
           "Exit?-------------------------------|------------------E------------\n"
           "====================================================================")
     # print("\nWould you like to create a new client?---Type N---to create a new client")
